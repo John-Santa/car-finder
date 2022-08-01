@@ -90,7 +90,12 @@ const filtrarAutos = () => {
         .filter( filtrarPuertas )
         .filter( filtrarTransmision )
         .filter( filtrarColor );
-    mostrarAutos(resultado);
+    if(resultado.length > 0) {
+        mostrarAutos(resultado);
+    }else{
+        limpiarHtml();
+        noResultado();
+    }
 }
 
 const filtrarMarca =  auto => {
@@ -147,6 +152,15 @@ const filtrarColor = auto => {
         return auto.color === colorBusqueda;
     }
     return auto;
+}
+
+const noResultado = () => {
+    const autoHTML = document.createElement('div');
+    autoHTML.classList.add('alerta', 'error');
+    autoHTML.textContent = `
+        No hay autos que coincidan con los criterios de búsqueda
+    `;
+    resultado.appendChild(autoHTML);
 }
 
 const limpiarHtml = () => {

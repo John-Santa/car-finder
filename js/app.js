@@ -48,6 +48,7 @@ maximo.addEventListener('change', (e) => {
 
 puertas.addEventListener('change', (e) => {
     datosBusqueda.puertas = e.target.value;
+    filtrarAutos();
 });
 
 transmision.addEventListener('change', (e) => {
@@ -83,7 +84,8 @@ const filtrarAutos = () => {
         .filter( filtrarMarca )
         .filter( filtrarYear )
         .filter( filtrarMinimo )
-        .filter( filtrarMaximo );
+        .filter( filtrarMaximo )
+        .filter( filtrarPuertas );
     mostrarAutos(resultado);
 }
 
@@ -115,6 +117,14 @@ const filtrarMaximo = auto => {
     const { maximo: maximoBusqueda } = datosBusqueda;
     if (maximoBusqueda) {
         return auto.precio <= parseInt(maximoBusqueda);
+    }
+    return auto;
+}
+
+const filtrarPuertas = auto => {
+    const { puertas: puertasBusqueda } = datosBusqueda;
+    if (puertasBusqueda) {
+        return auto.puertas === parseInt(puertasBusqueda);
     }
     return auto;
 }

@@ -22,7 +22,7 @@ const datosBusqueda = {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
-    mostrarAutos();
+    mostrarAutos(autos);
     cargarYear();
 });
 
@@ -38,10 +38,12 @@ year.addEventListener('change', (e) => {
 
 minimo.addEventListener('change', (e) => {
     datosBusqueda.minimo = e.target.value;
+    filtrarAutos();
 });
 
 maximo.addEventListener('change', (e) => {
     datosBusqueda.maximo = e.target.value;
+    filtrarAutos();
 });
 
 puertas.addEventListener('change', (e) => {
@@ -56,7 +58,8 @@ color.addEventListener('change', (e) => {
     datosBusqueda.color = e.target.value;
 });
 
-const mostrarAutos = () => {
+const mostrarAutos = (autos) => {
+    limpiarHtml();
     autos.forEach( ({ marca, modelo, year, puertas, transmision, precio, color }) => {
         const autoHTML = document.createElement('p');
         autoHTML.innerHTML = `
@@ -78,22 +81,46 @@ const cargarYear = () => {
 const filtrarAutos = () => {
     const resultado = autos
         .filter( filtrarMarca )
-        .filter( filtrarYear );
-    console.log(resultado);
+        .filter( filtrarYear )
+        .filter( filtrarMinimo )
+        .filter( filtrarMaximo );
+    mostrarAutos(resultado);
 }
 
-const filtrarMarca = ({marca}) => {
+const filtrarMarca =  auto => {
     const { marca: marcaBusqueda } = datosBusqueda;
     if (marcaBusqueda) {
-        return marca === marcaBusqueda;
+        return auto.marca === marcaBusqueda;
     }
     return auto;
 }
 
-const filtrarYear = ({year}) => {
+const filtrarYear = auto => {
     const { year: yearBusqueda } = datosBusqueda;
     if (yearBusqueda) {
-        return year === parseInt(yearBusqueda);
+        return auto.year === parseInt(yearBusqueda);
     }
     return auto;
+}
+
+const filtrarMinimo = auto => {
+    const { minimo: minimoBusqueda } = datosBusqueda;
+    if (minimoBusqueda) {
+        return auto.precio >= parseInt(minimoBusqueda);
+    }
+    return auto;
+}
+
+const filtrarMaximo = auto => {
+    const { maximo: maximoBusqueda } = datosBusqueda;
+    if (maximoBusqueda) {
+        return auto.precio <= parseInt(maximoBusqueda);
+    }
+    return auto;
+}
+
+const limpiarHtml = () => {
+    while (resultado.firstChild) {
+        resultado.removeChild(resultado.firstChild);
+    }
 }
